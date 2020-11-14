@@ -1,7 +1,5 @@
 from html.parser import HTMLParser
 from TermParser import TermParser
-import string
-import re
 
 termParser = TermParser()
 
@@ -20,26 +18,26 @@ class Parser():
         "title": "",
         "body": ""
     }):
-        if (arg.title == "" and arg.body == ""):
+        if (arg["title"] == "" and arg["body"] == ""):
             return
         
         termParser.clear()
 
-        if (arg.title != ""):
-            termParser.addTerms(arg.title)
+        if (arg["title"] != ""):
+            termParser.addTerms(arg["title"])
         
-        if (arg.body != ""):
-            textParser.feed(arg.body)
+        if (arg["body"] != ""):
+            textParser.feed(arg["body"])
 
         self.parsed = termParser.getTerms()
-        return self.parsed
+        return self.parsed.copy()
 
     def parseTags(self, tags):
         tags = tags.replace("<", "")
         tags = tags.split(">")
         tags.pop()
         self.parsed = tags
-        return self.parsed
+        return self.parsed.copy()
 
     def getParsed(self):
-        return self.parsed
+        return self.parsed.copy()

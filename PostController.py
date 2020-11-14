@@ -3,14 +3,18 @@ from DbConnection import db
 class PostController:
     def __init__(self):
         self.collection = db['Posts']
-    def get():
+    def get(self):
         return
 
-    def add():
+    def add(self, post):
+        return
+    
+    def addMany(self, posts):
+        self.collection.insert_many(posts)
+        print("done")
+
+    def delete(self):
         return
 
-    def delete():
-        return
-
-    def update():
+    def update(self):
         return
