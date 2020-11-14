@@ -1,11 +1,9 @@
-from DbConnection import db
-import json
-from JsonParser import JsonParser
-
 class TagController:
-    def __init__(self):
-        self.collection = db['Tags']
-    def get():
+    def __init__(self, db):
+        self.collectionName = 'Tags'
+        self.collection = db[self.collectionName]
+
+    def get(self):
         return
 
     def addMany(self, data):
@@ -15,12 +13,10 @@ class TagController:
     def delete(self):
         return
 
-    def update():
+    def update(self):
         return
 
-j = JsonParser()
-data = j.getData("Tags.json")['tags']['row']
+    def getCollectionName(self):
+        return self.collectionName
 
-tag = TagController()
-tag.addMany(data)
 

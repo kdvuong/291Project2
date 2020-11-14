@@ -1,8 +1,8 @@
-from DbConnection import db
-
 class PostController:
-    def __init__(self):
-        self.collection = db['Posts']
+    def __init__(self, db):
+        self.collectionName = 'Posts'
+        self.collection = db[self.collectionName]
+
     def get(self):
         return
 
@@ -11,10 +11,12 @@ class PostController:
     
     def addMany(self, posts):
         self.collection.insert_many(posts)
-        print("done")
 
     def delete(self):
         return
 
     def update(self):
         return
+
+    def getCollectionName(self):
+        return self.collectionName
