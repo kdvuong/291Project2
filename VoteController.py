@@ -2,7 +2,7 @@ from DbConnection import db
 
 class VoteController:
     def __init__(self):
-        self.collection = db['votes']
+        self.collection = db['Votes']
     def get():
         return
 

@@ -6,8 +6,7 @@ termParser = TermParser()
 
 class TextParser(HTMLParser):
     def handle_data(self, data):
-        formatted = data.translate(str.maketrans('', '', string.punctuation))
-        termParser.addTerms(formatted)
+        termParser.addTerms(data)
         
 textParser = TextParser()
 

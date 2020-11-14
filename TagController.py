@@ -2,7 +2,7 @@ from DbConnection import db
 
 class TagController:
     def __init__(self):
-        self.collection = db['tags']
+        self.collection = db['Tags']
     def get():
         return
 

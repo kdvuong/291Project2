@@ -3,8 +3,8 @@ class TermParser():
         self.terms = []
 
     def addTerms(self, data):
+        data = data.translate(str.maketrans('', '', string.punctuation)).split(' ')
         seen = {}
-        data = data.split(' ')
         for word in data:
             word = word.lower()
             if len(word) >= 3:
