@@ -4,15 +4,16 @@ from VoteController import VoteController
 from TagController import TagController
 
 # setup connection to collections
-posts = PostController()
-votes = VoteController()
-tags = TagController()
+# posts = PostController()
+# votes = VoteController()
+# tags = TagController()
 
 # setup parser
 parser = Parser()
 
 def main():
-    print("Hello World!")
+
+    print(parser.parseTags("<mac><audio><startup>"))
 
 if __name__ == "__main__":
     main()
