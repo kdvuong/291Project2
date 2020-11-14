@@ -1,10 +1,17 @@
 from Parser import Parser
 from JsonParser import JsonParser
-from DbConnection import db
+from DbConnection import getDb
 from PostController import PostController
 from VoteController import VoteController
 from TagController import TagController
 
+# setup db
+db = None
+try:
+    db = getDb()
+except Exception as err:
+    print(err.args[0])
+    exit()
 
 # setup connection to collections
 posts = PostController(db)
@@ -15,7 +22,7 @@ tags = TagController(db)
 jsonParser = JsonParser()
 parser = Parser()
 
-def setup():
+def setupCollections():
     collectionNames = db.list_collection_names()
     if (posts.getCollectionName() in collectionNames):
         db.drop_collection(posts.getCollectionName())
@@ -27,7 +34,7 @@ def setup():
         db.drop_collection(tags.getCollectionName())
 
 def buildPostCollection():
-    postData = jsonParser.getData("posts.json")["posts"]["row"]
+    postData = jsonParser.getData("Posts.json")["posts"]["row"]
     for data in postData:
         titleAndBody = {"title": "", "body": ""}
         if "Title" in data:
@@ -52,7 +59,7 @@ def buildVotesCollection():
     votes.addMany(data)
 
 def main():
-    setup()
+    setupCollections()
     buildPostCollection()
     buildTagsCollection()
     buildVotesCollection()

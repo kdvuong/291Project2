@@ -7,7 +7,7 @@ class VoteController:
         return self.collection.find()
 
     def get(self, id):
-        return self.collection.find({"VoteTypeId": {"$eq": id}})
+        return self.collection.find({"Id": {"$eq": id}})
 
     def addMany(self, data):
         self.collection.insert_many(data)
