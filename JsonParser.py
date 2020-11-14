@@ -1,12 +1,12 @@
 import json
 
-class JsonParser:        
+class JsonParser:
     def getData(self, fileName):
         with open(fileName) as json_file:
             data = json.load(json_file)
             return data
 
-# j = JsonParser()
-# data = j.getData('Votes.json')
+# j = JsonParser('Posts.json')
+# data = j.getData()
 # print(data)
 
