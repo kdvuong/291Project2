@@ -67,7 +67,10 @@ def main():
                 chosenIndex = int(input("Choose a question by index: "))
                 if (chosenIndex < len(searchResult) and chosenIndex >= 0):
                     chosenQuestion = searchResult[chosenIndex]
-                    print(chosenQuestion.keys())
+                    columns = chosenQuestion.keys()
+                    for col in columns:
+                        if (col != "_id"):
+                            print("{col}: {val}", col = col, val = chosenQuestion[col])
 
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
