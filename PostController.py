@@ -1,3 +1,6 @@
+from datetime import date
+import uuid
+
 class PostController:
     def __init__(self, db):
         self.collectionName = 'Posts'
@@ -35,3 +38,19 @@ class PostController:
             "OwnerUserId": userId,
             "PostTypeId": "2"
         })
+
+    def answer(self, userId, postId, body):
+        answerId = uuid.uuid4()
+        today = date.today()
+        self.collection.insert({
+            "Id": answerId,
+            "PostTypeId": "2",
+            "ParentId": postId,
+            "CreationDate": today,
+            "Score": "0",
+            "Body": body
+            "OwnerUserId": userId
+            "CommentCount": "0",
+            "ContentLicense": "CC BY-SA 2.5"
+        })
+    
