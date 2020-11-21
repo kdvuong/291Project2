@@ -43,7 +43,7 @@ def main():
         print("Questions avg score: {score}".format(score = qAvgScore))
         print("Answers count      : {count}".format(count = answerCount))
         print("Answers avg score  : {score}".format(score = aAvgScore))
-        print("Votes casted       : {voteCount}".format(voteCount = voteCount)
+        print("Votes casted       : {voteCount}".format(voteCount = voteCount))
         
         print("DONE DONE DONE DONE------------")
     else:
