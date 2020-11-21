@@ -54,14 +54,21 @@ def main():
             searchResult = list(posts.getQuestionsByKeywords(keywords))
             if (len(searchResult) > 0):
                 print("Id | Title | Creation Date | Score | Answer Count")
-                for item in searchResult:
-                    print("{id} | {title} | {date} | {score} | {answerCount}".format(
+                for index, item in enumerate(searchResult):
+                    print("{index} | {id} | {title} | {date} | {score} | {answerCount}".format(
+                        index = index,
                         id = item["Id"],
                         title = item["Title"],
                         date = item["CreationDate"],
                         score = item["Score"],
                         answerCount = item["AnswerCount"]
                     ))
+                
+                chosenIndex = int(input("Choose a question by index: "))
+                if (chosenIndex < len(searchResult) and chosenIndex >= 0):
+                    chosenQuestion = searchResult[chosenIndex]
+                    print(chosenQuestion.keys())
+
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
         elif (action == "exit"):
