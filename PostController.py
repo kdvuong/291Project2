@@ -28,8 +28,6 @@ class PostController:
             "Terms": parser.parseTitleAndBody({"title": title, "body": body})
         }
 
-        print(newPost["Id"])
-
         if (userId != ""): # with userID
             newPost["OwnerUserId"] = userId
 
@@ -99,6 +97,8 @@ class PostController:
             "ContentLicense": "CC BY-SA 2.5",
             "Terms": parser.parseTitleAndBody({"title": "", "body": body})
         }
+
+        print(answer["Id"])
 
         if (userId != ""):
             answer["OwnerUserId"] = userId

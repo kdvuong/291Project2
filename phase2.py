@@ -111,8 +111,8 @@ def main():
                         print("4. back   - go back")
                         questionAction = input("Choose an action (text or number): ").lower()
                         if (questionAction == "1" or questionAction == "answer"):
-                            # answer
-                            continue
+                            answerBody = input("Answer body: ")
+                            posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
                             # list answers
                             continue
