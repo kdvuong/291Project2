@@ -71,7 +71,12 @@ def main():
         if (action == "1" or action == "post"):
             title = input("Enter a title: ")
             body = input("Enter a body: ")
-            tags = input("Enter a tag (optional): ").lower().split(" ")
+            tags = input("Enter a tag (optional): ").lower().strip()
+            
+            if (tags != ""):
+                tags = tags.split(" ")
+            else:
+                tags = []
             
             posts.postQuestion(userId, body, title, tags)
         elif (action == "2" or action == "search"):

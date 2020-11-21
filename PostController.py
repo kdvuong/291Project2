@@ -25,7 +25,6 @@ class PostController:
             "CommentCount": 0,
             "FavoriteCount": 0,
             "ContentLicense": "CC BY-SA 2.5",
-            "Tags": tags,
             "Terms": parser.parseTitleAndBody({"title": title, "body": body})
         }
 
@@ -33,6 +32,9 @@ class PostController:
 
         if (userId != ""): # with userID
             newPost["OwnerUserId"] = userId
+
+        if (len(tags) > 0):
+            newPost["Tags"] = tags
 
         # Insert Data
         self.collection.insert_one(newPost)
