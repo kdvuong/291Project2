@@ -2,8 +2,7 @@ from DbConnection import getDb
 from PostController import PostController
 from VoteController import VoteController
 from TagController import TagController
-from datetime import date
-import uuid
+
 
 # constants
 ACTION_OPTIONS = """-----------------------------------
@@ -58,23 +57,79 @@ def main():
         print("Answers count      : {count}".format(count = answerCount))
         print("Answers avg score  : {score}".format(score = aAvgScore))
         print("Votes casted       : {voteCount}".format(voteCount = voteCount))
-        
-        print("DONE DONE DONE DONE------------")
     else:
         print("No user id provided")
 
-    while (1):
-        actions = input(ACTION_OPTIONS)
-        if (actions == 1):
+    while (True):
+        print("Available actions:")
+        print("1. post   - post a question")
+        print("2. search - search for questions by keywords")
+        print("3. exit   - exit program")
+
+        action = input("Choose an action (number or text): ").lower()
+
+        if (action == "1" or action == "post"):
             title = input("Enter a title: ")
             body = input("Enter a body: ")
-            tags = input("Enter a tag (optional): ")
-            postId = uuid.uuid4()
-            date = date.today()
+            tags = input("Enter a tag (optional): ").lower().strip()
+            
             if (tags != ""):
-                posts.update({"Id": postId}, {"$set": {"Tags": "<{tag}>"}.format(tag = tags)})
+                tags = tags.split(" ")
             else:
-                continue
+                tags = []
+            
+            posts.postQuestion(userId, body, title, tags)
+        elif (action == "2" or action == "search"):
+            keywords = input("Enter keywords to search: ").lower().split(" ")
+            searchResult = list(posts.getQuestionsByKeywords(keywords))
+            if (len(searchResult) > 0):
+                print("Id | Title | Creation Date | Score | Answer Count")
+                for index, item in enumerate(searchResult):
+                    print("{index} | {id} | {title} | {date} | {score} | {answerCount}".format(
+                        index = index,
+                        id = item["Id"],
+                        title = item["Title"],
+                        date = item["CreationDate"],
+                        score = item["Score"],
+                        answerCount = item["AnswerCount"]
+                    ))
+                
+                chosenIndex = int(input("Choose a question by index: "))
+                if (chosenIndex < len(searchResult) and chosenIndex >= 0):
+                    chosenQuestion = searchResult[chosenIndex]
+                    columns = chosenQuestion.keys()
+                    for col in columns:
+                        if (col != "_id"):
+                            print("{col}: {val}".format(col = col, val = chosenQuestion[col]))
+                    posts.increaseViewCount(chosenQuestion["_id"])
+
+                    while (True):
+                        print("Available actions:")
+                        print("1. answer - post an answer for this question")
+                        print("2. list   - list all answers")
+                        print("3. vote   - cast a vote to this question")
+                        print("4. back   - go back")
+                        questionAction = input("Choose an action (text or number): ").lower()
+                        if (questionAction == "1" or questionAction == "answer"):
+                            answerBody = input("Answer body: ")
+                            posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
+                        elif (questionAction == "2" or questionAction == "list"):
+                            # list answers
+                            continue
+                        elif (questionAction == "3" or questionAction == "vote"):
+                            # vote
+                            continue
+                        elif (questionAction == "4" or questionAction == "back"):
+                            break
+                        else:
+                            print("ERROR: invalid action. Choose again.")
+                else:
+                    print("ERROR: invalid index. Choose again.")
+            else:
+                print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
+        elif (action == "3" or action == "exit"):
+            print("exiting...")
+            break
 
     return
 
