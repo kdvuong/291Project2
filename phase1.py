@@ -82,6 +82,7 @@ def buildVotesCollection():
 def main():
     start = time.time()
 
+    # Set up collections
     setupCollections()
     buildPostCollection()
     buildTagsCollection()
