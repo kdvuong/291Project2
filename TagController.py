@@ -9,7 +9,7 @@ class TagController:
     def addMany(self, data):
         self.collection.insert_many(data)
         return
-
+        
     def delete(self):
         return
 

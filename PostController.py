@@ -11,7 +11,7 @@ class PostController:
     
     def addMany(self, posts):
         self.collection.insert_many(posts)
-
+        
     def delete(self):
         return
 
