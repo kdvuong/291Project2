@@ -70,7 +70,7 @@ def main():
                     columns = chosenQuestion.keys()
                     for col in columns:
                         if (col != "_id"):
-                            print("{col}: {val}", col = col, val = chosenQuestion[col])
+                            print("{col}: {val}".format(col = col, val = chosenQuestion[col]))
 
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
