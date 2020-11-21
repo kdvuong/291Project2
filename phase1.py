@@ -33,6 +33,7 @@ def setupCollections():
 
     if (votes.getCollectionName() in collectionNames):
         db.drop_collection(tags.getCollectionName())
+    
 
 def buildPostCollection():
     print("Building post collection")
@@ -52,6 +53,7 @@ def buildPostCollection():
         if "Tags" in data:
             data["Tags"] = parser.parseTags(data["Tags"])
 
+    posts.createIndex("Terms")
     posts.addMany(postData)
 
     end = time.time()
