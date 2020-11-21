@@ -51,16 +51,19 @@ def main():
         action = input("Choose an action: ")
         if (action == "2"):
             keywords = input("Enter keywords to search: ").lower().split(" ")
-            searchResult = posts.getQuestionsByKeywords(keywords)
-            for item in searchResult:
+            searchResult = list(posts.getQuestionsByKeywords(keywords))
+            if (len(searchResult) > 0):
                 print("Id | Title | Creation Date | Score | Answer Count")
-                print("{id} | {title} | {date} | {score} | {answerCount}".format(
-                    id = item["Id"],
-                    title = item["Title"],
-                    date = item["CreationDate"],
-                    score = item["Score"],
-                    answerCount = item["AnswerCount"]
-                ))
+                for item in searchResult:
+                    print("{id} | {title} | {date} | {score} | {answerCount}".format(
+                        id = item["Id"],
+                        title = item["Title"],
+                        date = item["CreationDate"],
+                        score = item["Score"],
+                        answerCount = item["AnswerCount"]
+                    ))
+            else:
+                print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
         elif (action == "exit"):
             print("exiting...")
             break
