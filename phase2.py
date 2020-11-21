@@ -40,8 +40,8 @@ def main():
         
         print("Questions count    : {count}".format(count = questionCount))
         print("Questions avg score: {score}".format(score = qAvgScore))
-        print("Answers count    : {count}".format(count = answerCount))
-        print("Answers avg score: {score}".format(score = aAvgScore))
+        print("Answers count      : {count}".format(count = answerCount))
+        print("Answers avg score  : {score}".format(score = aAvgScore))
         
         print("DONE DONE DONE DONE------------")
     else:
