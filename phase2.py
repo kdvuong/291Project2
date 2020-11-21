@@ -53,7 +53,14 @@ def main():
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = posts.getQuestionsByKeywords(keywords)
             for item in searchResult:
-                print(item["Id"])
+                print("Id | Title | Creation Date | Score | Answer Count")
+                print("{id} | {title} | {date} | {score} | {answerCount}".format(
+                    id = item["Id"],
+                    title = item["Title"],
+                    date = item["CreationDate"],
+                    score = item["Score"],
+                    answerCount = item["AnswerCount"]
+                ))
         elif (action == "exit"):
             print("exiting...")
             break
