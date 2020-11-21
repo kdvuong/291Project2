@@ -44,10 +44,19 @@ def main():
         print("Answers count      : {count}".format(count = answerCount))
         print("Answers avg score  : {score}".format(score = aAvgScore))
         print("Votes casted       : {voteCount}".format(voteCount = voteCount))
-        
-        print("DONE DONE DONE DONE------------")
     else:
         print("No user id provided")
+
+    while (True):
+        action = input("Choose an action: ")
+        if (action == "2"):
+            keywords = input("Enter keywords to search: ").lower().split(" ")
+            searchResult = posts.getQuestionsByKeywords(keywords)
+            for item in searchResult:
+                print(item["Id"])
+        elif (action == "exit"):
+            print("exiting...")
+            break
 
     return
 

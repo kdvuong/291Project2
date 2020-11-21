@@ -35,3 +35,20 @@ class PostController:
             "OwnerUserId": userId,
             "PostTypeId": "2"
         })
+
+    def getQuestionsByKeywords(self, keywords):
+        return self.collection.find({
+            "PostTypeId": "1",
+            "$or": [
+                {
+                    "Terms": {
+                        "$all": keywords
+                    }
+                },
+                {
+                    "Tags": {
+                        "$all": keywords
+                    }
+                }
+            ]
+        })
