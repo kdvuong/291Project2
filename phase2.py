@@ -34,7 +34,7 @@ def main():
     if (userId != ""):
         questions = list(posts.getQuestions(userId))
         answers = list(posts.getAnswers(userId))
-        votes = list(votes.getByUserId(userId))
+        voteCount = len(list(votes.getByUserId(userId)))
 
         questionCount, qAvgScore = getCountAndAvgScore(questions)
         answerCount, aAvgScore = getCountAndAvgScore(answers)
@@ -43,7 +43,7 @@ def main():
         print("Questions avg score: {score}".format(score = qAvgScore))
         print("Answers count      : {count}".format(count = answerCount))
         print("Answers avg score  : {score}".format(score = aAvgScore))
-        print("Votes casted       : {voteCount}".format(voteCount = len(votes)))
+        print("Votes casted       : {voteCount}".format(voteCount = voteCount)
         
         print("DONE DONE DONE DONE------------")
     else:
