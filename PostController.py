@@ -20,3 +20,6 @@ class PostController:
 
     def getCollectionName(self):
         return self.collectionName
+    
+    def createIndex(self, fieldName):
+        self.collection.create_index([(fieldName, -1)])
