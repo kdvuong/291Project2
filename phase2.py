@@ -24,7 +24,7 @@ def getCountAndAvgScore(l):
     if (count > 0):
         totalScore = 0
         for item in l:
-            totalScore += item["Score"]
+            totalScore += int(item["Score"])
         avgScore = totalScore/count
     
     return (count, avgScore)
