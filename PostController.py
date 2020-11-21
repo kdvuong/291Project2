@@ -7,10 +7,39 @@ class PostController:
         self.collection = db[self.collectionName]
 
     def get(self):
-        return
+        return self.collection.find()
 
-    def add(self, post):
-        return
+    def addOne(self, postId, date, userId, body, title):
+        if (userId != ""): # with userID
+            NewPost = {
+                "Id": postId,
+                "PostTypeId": 1,
+                "CreationDate": date,
+                "Score": 0,
+                "ViewCount": 0,
+                "Body": body,
+                "OwnerUserId": userId,
+                "AnswerCount": 0,
+                "CommentCount": 0,
+                "FavoriteCount": 0,
+                "ContentLicense": "CC BY-SA 2.5"
+            }
+        else: # anonymous user
+            NewPost = {
+                "Id": postId,
+                "PostTypeId": 1,
+                "CreationDate": date,
+                "Score": 0,
+                "ViewCount": 0,
+                "Body": body,
+                "AnswerCount": 0,
+                "CommentCount": 0,
+                "FavoriteCount": 0,
+                "ContentLicense": "CC BY-SA 2.5"
+            }
+        # Insert Data
+        self.collection.insert_one(NewPost)
+
     
     def addMany(self, posts):
         self.collection.insert_many(posts)

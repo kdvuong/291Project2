@@ -2,6 +2,19 @@ from DbConnection import getDb
 from PostController import PostController
 from VoteController import VoteController
 from TagController import TagController
+from datetime import date
+import uuid
+
+# constants
+ACTION_OPTIONS = """-----------------------------------
+Choose the following option:
+-----------------------------------
+1. POST (post a question)
+2. SEARCH (search for a post)
+3. LOGOUT (log out)
+------------------------------------
+What do you want to do? (number or text): """
+
 
 # setup db
 db = None
@@ -29,6 +42,7 @@ def getCountAndAvgScore(l):
     
     return (count, avgScore)
 
+
 def main():
     userId = input("Enter user id (optional): ")
     if (userId != ""):
@@ -48,6 +62,19 @@ def main():
         print("DONE DONE DONE DONE------------")
     else:
         print("No user id provided")
+
+    while (1):
+        actions = input(ACTION_OPTIONS)
+        if (actions == 1):
+            title = input("Enter a title: ")
+            body = input("Enter a body: ")
+            tags = input("Enter a tag (optional): ")
+            postId = uuid.uuid4()
+            date = date.today()
+            if (tags != ""):
+                posts.update({"Id": postId}, {"$set": {"Tags": "<{tag}>"}.format(tag = tags)})
+            else:
+                continue
 
     return
 
