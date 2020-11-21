@@ -27,5 +27,5 @@ class PostController:
     def getQuestions(self, userId):
         return self.collection.find({
             "OwnerUserId": userId,
-            "PostTypeId": 1
+            "PostTypeId": "1"
         })
