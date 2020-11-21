@@ -2,8 +2,7 @@ from DbConnection import getDb
 from PostController import PostController
 from VoteController import VoteController
 from TagController import TagController
-from datetime import date
-import uuid
+
 
 # constants
 ACTION_OPTIONS = """-----------------------------------
@@ -62,18 +61,20 @@ def main():
         print("No user id provided")
 
     while (True):
-        action = input("Choose an action: ")
-        if (action == "1"):
-             title = input("Enter a title: ")
+        print("Available actions:")
+        print("1. post   - post a question")
+        print("2. search - search for questions by keywords")
+        print("3. exit   - exit program")
+
+        action = input("Choose an action (number or text): ").lower()
+
+        if (action == "1" or action == "post"):
+            title = input("Enter a title: ")
             body = input("Enter a body: ")
-            tags = input("Enter a tag (optional): ")
-            postId = uuid.uuid4()
-            date = date.today()
-            if (tags != ""):
-                posts.update({"Id": postId}, {"$set": {"Tags": "<{tag}>"}.format(tag = tags)})
-            else:
-                continue
-        elif (action == "2"):
+            tags = input("Enter a tag (optional): ").lower().split(" ")
+            
+            posts.postQuestion(userId, body, title, tags)
+        elif (action == "2" or action == "search"):
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = list(posts.getQuestionsByKeywords(keywords))
             if (len(searchResult) > 0):
@@ -121,7 +122,7 @@ def main():
                     print("ERROR: invalid index. Choose again.")
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
-        elif (action == "exit"):
+        elif (action == "3" or action == "exit"):
             print("exiting...")
             break
 

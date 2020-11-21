@@ -1,5 +1,8 @@
 from datetime import date
 import uuid
+from Parser import Parser
+
+parser = Parser()
 
 class PostController:
     def __init__(self, db):
@@ -9,36 +12,28 @@ class PostController:
     def get(self):
         return self.collection.find()
 
-    def addOne(self, postId, date, userId, body, title):
+    def postQuestion(self, userId, body, title, tags):
+        newPost = {
+            "Id": uuid.uuid4(),
+            "PostTypeId": 1,
+            "CreationDate": date.today(),
+            "Score": 0,
+            "ViewCount": 0,
+            "Body": body,
+            "Title": title,
+            "AnswerCount": 0,
+            "CommentCount": 0,
+            "FavoriteCount": 0,
+            "ContentLicense": "CC BY-SA 2.5",
+            "Tags": tags,
+            "Terms": parser.parseTitleAndBody({"title": title, "body": body})
+        }
+
         if (userId != ""): # with userID
-            NewPost = {
-                "Id": postId,
-                "PostTypeId": 1,
-                "CreationDate": date,
-                "Score": 0,
-                "ViewCount": 0,
-                "Body": body,
-                "OwnerUserId": userId,
-                "AnswerCount": 0,
-                "CommentCount": 0,
-                "FavoriteCount": 0,
-                "ContentLicense": "CC BY-SA 2.5"
-            }
-        else: # anonymous user
-            NewPost = {
-                "Id": postId,
-                "PostTypeId": 1,
-                "CreationDate": date,
-                "Score": 0,
-                "ViewCount": 0,
-                "Body": body,
-                "AnswerCount": 0,
-                "CommentCount": 0,
-                "FavoriteCount": 0,
-                "ContentLicense": "CC BY-SA 2.5"
-            }
+            newPost["OwnerUserId"] = userId
+
         # Insert Data
-        self.collection.insert_one(NewPost)
+        self.collection.insert_one(newPost)
 
     
     def addMany(self, posts):
@@ -88,17 +83,20 @@ class PostController:
     def increaseViewCount(self, id):
         self.collection.update_one({ "_id": id}, {"$inc": { "ViewCount": 1}})
 
-    def answer(self, userId, postId, body):
-        answerId = uuid.uuid4()
-        today = date.today()
-        self.collection.insert({
-            "Id": answerId,
+    def postAnswer(self, userId, parentId, body):
+        answer = {
+            "Id": uuid.uuid4(),
             "PostTypeId": "2",
-            "ParentId": postId,
-            "CreationDate": today,
-            "Score": "0",
+            "ParentId": parentId,
+            "CreationDate": date.today(),
+            "Score": 0,
             "Body": body,
-            "OwnerUserId": userId,
-            "CommentCount": "0",
-            "ContentLicense": "CC BY-SA 2.5"
-        })
+            "CommentCount": 0,
+            "ContentLicense": "CC BY-SA 2.5",
+            "Terms": parser.parseTitleAndBody({"title": "", "body": body})
+        }
+
+        if (userId != ""):
+            answer["OwnerUserId"] = userId
+
+        self.collection.insert_one(answer)
