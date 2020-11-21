@@ -15,7 +15,7 @@ class PostController:
     def postQuestion(self, userId, body, title, tags):
         newPost = {
             "Id": str(uuid.uuid4()),
-            "PostTypeId": 1,
+            "PostTypeId": "1",
             "CreationDate": datetime.now(),
             "Score": 0,
             "ViewCount": 0,
