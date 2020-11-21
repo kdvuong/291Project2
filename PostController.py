@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 import uuid
 from Parser import Parser
 
@@ -16,7 +16,7 @@ class PostController:
         newPost = {
             "Id": uuid.uuid4(),
             "PostTypeId": 1,
-            "CreationDate": date.today(),
+            "CreationDate": datetime.now(),
             "Score": 0,
             "ViewCount": 0,
             "Body": body,
@@ -88,7 +88,7 @@ class PostController:
             "Id": uuid.uuid4(),
             "PostTypeId": "2",
             "ParentId": parentId,
-            "CreationDate": date.today(),
+            "CreationDate": datetime.now(),
             "Score": 0,
             "Body": body,
             "CommentCount": 0,
