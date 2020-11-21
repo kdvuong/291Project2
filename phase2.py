@@ -21,9 +21,12 @@ def main():
     userId = input("Enter user id (optional): ")
     if (userId != ""):
         questions = posts.getQuestions(userId)
-        questionsCount = questions.count()
+        # questionsCount = questions.count()
+        i = 0
         for question in questions:
+            i += 1
             print(question["Id"])
+            print(i)
         
         print("DONE DONE DONE DONE------------")
     else:
