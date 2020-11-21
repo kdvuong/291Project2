@@ -20,3 +20,8 @@ class VoteController:
 
     def getCollectionName(self):
         return self.collectionName
+    
+    def getByUserId(self, userId):
+        return self.collection.find({
+            "UserId": userId
+        })
