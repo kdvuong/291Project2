@@ -14,7 +14,7 @@ class PostController:
 
     def postQuestion(self, userId, body, title, tags):
         newPost = {
-            "Id": uuid.uuid4(),
+            "Id": str(uuid.uuid4()),
             "PostTypeId": 1,
             "CreationDate": datetime.now(),
             "Score": 0,
@@ -87,7 +87,7 @@ class PostController:
 
     def postAnswer(self, userId, parentId, body):
         answer = {
-            "Id": uuid.uuid4(),
+            "Id": str(uuid.uuid4()),
             "PostTypeId": "2",
             "ParentId": parentId,
             "CreationDate": datetime.now(),
