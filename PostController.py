@@ -42,12 +42,12 @@ class PostController:
             "$or": [
                 {
                     "Terms": {
-                        "$all": keywords
+                        "$in": keywords
                     }
                 },
                 {
                     "Tags": {
-                        "$all": keywords
+                        "$in": keywords
                     }
                 }
             ]
