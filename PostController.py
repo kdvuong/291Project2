@@ -29,7 +29,7 @@ class PostController:
             "Terms": parser.parseTitleAndBody({"title": title, "body": body})
         }
 
-        print(newPost["Terms"])
+        print(newPost["Id"])
 
         if (userId != ""): # with userID
             newPost["OwnerUserId"] = userId
