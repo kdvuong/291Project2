@@ -23,7 +23,7 @@ def main():
         questions = posts.getQuestions(userId)
         questionsCount = questions.count()
         for question in questions:
-            print(question)
+            print(question["Id"])
         
         print("DONE DONE DONE DONE------------")
     else:
