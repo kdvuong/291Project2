@@ -71,7 +71,30 @@ def main():
                     for col in columns:
                         if (col != "_id"):
                             print("{col}: {val}".format(col = col, val = chosenQuestion[col]))
+                    posts.increaseViewCount(chosenQuestion["_id"])
 
+                    while (True):
+                        print("Available actions:")
+                        print("1. answer - post an answer for this question")
+                        print("2. list   - list all answers")
+                        print("3. vote   - cast a vote to this question")
+                        print("4. back   - go back")
+                        questionAction = input("Choose an action (text or number): ").lower()
+                        if (questionAction == "1" or questionAction == "answer"):
+                            # answer
+                            continue
+                        elif (questionAction == "2" or questionAction == "list"):
+                            # list answers
+                            continue
+                        elif (questionAction == "3" or questionAction == "vote"):
+                            # vote
+                            continue
+                        elif (questionAction == "4" or questionAction == "back"):
+                            break
+                        else:
+                            print("ERROR: invalid action. Choose again.")
+                else:
+                    print("ERROR: invalid index. Choose again.")
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
         elif (action == "exit"):

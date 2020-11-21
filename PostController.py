@@ -52,3 +52,6 @@ class PostController:
                 }
             ]
         })
+
+    def increaseViewCount(self, id):
+        self.collection.update_one({ "_id": id}, {"$inc": { "ViewCount": 1}})
