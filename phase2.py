@@ -7,6 +7,7 @@ from TagController import TagController
 db = None
 try:
     db = getDb()
+    
 except Exception as err:
     print(err.args[0])
     exit()
@@ -21,12 +22,13 @@ def main():
     userId = input("Enter user id (optional): ")
     if (userId != ""):
         questions = posts.getQuestions(userId)
-        # questionsCount = questions.count()
-        i = 0
+        questionsCount = questions.count()
+        totalScore = 0
         for question in questions:
-            i += 1
-            print(question["Id"])
-            print(i)
+            totalScore += question["Score"]
+        
+        print("Questions count: {count}".format(count = questionsCount))
+        print("Avg score      : {score}".format(score = totalScore/questionsCount))
         
         print("DONE DONE DONE DONE------------")
     else:
