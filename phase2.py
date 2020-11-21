@@ -18,6 +18,15 @@ tags = TagController(db)
 
 
 def main():
+    userId = input("Enter user id (optional): ")
+    if (userId != ""):
+        questions = posts.getQuestions(userId)
+        questionsCount = questions.count()
+        for question in questions:
+            print(question)
+    else:
+        print("No user id provided")
+
     return
 
 if __name__ == "__main__":

@@ -23,3 +23,9 @@ class PostController:
     
     def createIndex(self, fieldName):
         self.collection.create_index([(fieldName, -1)])
+
+    def getQuestions(self, userId):
+        return self.collection.find({
+            "OwnerUserId": userId,
+            "PostTypeId": 1
+        })
