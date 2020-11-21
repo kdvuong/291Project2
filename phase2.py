@@ -17,22 +17,31 @@ posts = PostController(db)
 votes = VoteController(db)
 tags = TagController(db)
 
+def getCountAndAvgScore(l):
+    count = len(l)
+    avgScore = 0
+
+    if (count > 0):
+        totalScore = 0
+        for item in l:
+            totalScore += item["Score"]
+        avgScore = totalScore/count
+    
+    return (count, avgScore)
 
 def main():
     userId = input("Enter user id (optional): ")
     if (userId != ""):
         questions = list(posts.getQuestions(userId))
-        questionsCount = len(questions)
-        totalScore = 0
-        for question in questions:
-            totalScore += question["Score"]
+        answers = list(posts.getAnswers(userId))
 
-        avgScore = 0
-        if (questionsCount > 0):
-            avgScore = totalScore/questionsCount
+        questionCount, qAvgScore = getCountAndAvgScore(questions)
+        answerCount, aAvgScore = getCountAndAvgScore(answers)
         
-        print("Questions count: {count}".format(count = questionsCount))
-        print("Avg score      : {score}".format(score = avgScore))
+        print("Questions count    : {count}".format(count = questionCount))
+        print("Questions avg score: {score}".format(score = qAvgScore))
+        print("Answers count    : {count}".format(count = answerCount))
+        print("Answers avg score: {score}".format(score = aAvgScore))
         
         print("DONE DONE DONE DONE------------")
     else:

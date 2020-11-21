@@ -29,3 +29,9 @@ class PostController:
             "OwnerUserId": userId,
             "PostTypeId": "1"
         })
+
+    def getAnswers(self, userId):
+        return self.collection.find({
+            "OwnerUserId": userId,
+            "PostTypeId": "2"
+        })
