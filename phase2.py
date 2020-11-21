@@ -24,6 +24,8 @@ def main():
         questionsCount = questions.count()
         for question in questions:
             print(question)
+        
+        print("DONE DONE DONE DONE------------")
     else:
         print("No user id provided")
 
