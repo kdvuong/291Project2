@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from Parser import Parser
 
 
+# Function to connect to MongoDb server based on cloud/port number
 def getDb():
     client = None
     db = None

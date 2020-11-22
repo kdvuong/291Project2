@@ -23,6 +23,7 @@ tags = TagController(db)
 jsonParser = JsonParser()
 parser = Parser()
 
+# function to handle setting up collections
 def setupCollections():
     collectionNames = db.list_collection_names()
     if (posts.getCollectionName() in collectionNames):
@@ -34,7 +35,7 @@ def setupCollections():
     if (votes.getCollectionName() in collectionNames):
         db.drop_collection(tags.getCollectionName())
     
-
+# function to build post collection
 def buildPostCollection():
     print("Building post collection")
     start = time.time()
@@ -59,6 +60,7 @@ def buildPostCollection():
     end = time.time()
     print("Done. Time elapsed: {elapsed}".format(elapsed = end - start))
 
+# function to build tag collection
 def buildTagsCollection():
     print("Building tags collection")
     start = time.time()
@@ -69,6 +71,7 @@ def buildTagsCollection():
     end = time.time()
     print("Done. Time elapsed: {elapsed}".format(elapsed = end - start))
 
+# function to build vote collection
 def buildVotesCollection():
     print("Building votes collection")
     start = time.time()
