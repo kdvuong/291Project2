@@ -83,7 +83,7 @@ def main():
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = list(posts.getQuestionsByKeywords(keywords))
             if (len(searchResult) > 0):
-                print("Id | Title | Creation Date | Score | Answer Count")
+                print("Index | Id | Title | Creation Date | Score | Answer Count")
                 for index, item in enumerate(searchResult):
                     print("{index} | {id} | {title} | {date} | {score} | {answerCount}".format(
                         index = index,
@@ -114,8 +114,28 @@ def main():
                             answerBody = input("Answer body: ")
                             posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
-                            # list answers
-                            continue
+                            answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
+                            if (len(answers) > 0):
+                                for index, answer in enumerate(answers):
+                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                        acceptedAnswer = answers.pop(index)
+                                        answers.insert(0, acceptedAnswer)
+                                print("Index | Id | Body | Creation Date | Score ")
+                                for answer in answers:
+                                    star = ""
+                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                        star = "*"
+                                    print("{index} | {id} | {title} | {date} | {score} {star}".format(
+                                        index = index,
+                                        id = answer["Id"],
+                                        body = answer["Body"],
+                                        date = answer["CreationDate"],
+                                        score = answer["Score"],
+                                        star = star
+                                    ))
+                            else:
+                                print("Question has no answer.")
+
                         elif (questionAction == "3" or questionAction == "vote"):
                             # vote
                             continue

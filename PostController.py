@@ -104,3 +104,6 @@ class PostController:
             answer["OwnerUserId"] = userId
 
         self.collection.insert_one(answer)
+
+    def getAnswersByQuestionId(self, qid):
+        return self.collection.find({"ParentId": qid, "PostTypeId": "2"})
