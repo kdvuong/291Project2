@@ -81,10 +81,10 @@ def main():
             posts.postQuestion(userId, body, title, tags)
         elif (action == "2" or action == "search"):
             keywords = input("Enter keywords to search: ").lower().split(" ")
-            searchResult = posts.getQuestionsByKeywords(keywords)
-            if (len(list(searchResult)) > 0):
+            searchResult = list(posts.getQuestionsByKeywords(keywords))
+            if (len(searchResult) > 0):
                 print("Id | Title | Creation Date | Score | Answer Count")
-                for item in list(searchResult):
+                for item in searchResult:
                     print("{id} | {title} | {date} | {score} | {answerCount}".format(
                         id = item["Id"],
                         title = item["Title"],
@@ -94,8 +94,13 @@ def main():
                     ))
                 
                 chosenQid = input("Choose a question id: ")
-                chosenQuestion = searchResult.where("this.Id = '{id}'".format(id = chosenQid))
-                if (len(list(chosenQuestion)) == 1):
+                chosenQuestion = None
+                for question in searchResult:
+                    if (question["Id"] == chosenQid):
+                        chosenQuestion = question
+                        break
+                
+                if (chosenQuestion != None):
                     chosenQuestion = chosenQuestion[0]
                     columns = chosenQuestion.keys()
                     for col in columns:
