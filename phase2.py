@@ -3,7 +3,6 @@ from PostController import PostController
 from VoteController import VoteController
 from TagController import TagController
 
-
 # constants
 MAIN_ACTION_PROMPT = """Available actions:
 1. post   - post a question
