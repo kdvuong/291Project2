@@ -118,9 +118,9 @@ def main():
                             answerBody = input("Answer body: ")
                             posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
-                            answers = posts.getAnswersByQuestionId(chosenQuestion["Id"])
+                            answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
                             if (len(answers) > 0):
-                                for index, answer in enumerate(list(answers)):
+                                for index, answer in enumerate(answers):
                                     if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
                                         acceptedAnswer = answers.pop(index)
                                         answers.insert(0, acceptedAnswer)
@@ -137,9 +137,13 @@ def main():
                                         star = star
                                     ))
                                 chosenAid = input("Choose an answer id: ")
-                                chosenAnswer = answers.where("this.Id = '{id}'".format(id = chosenAid))
-                                if (len(list(chosenAnswer)) == 1):
-                                    chosenAnswer = chosenAnswer[0]
+                                chosenAnswer = None
+
+                                for answer in answers:
+                                    if (answer["Id"] == chosenAid):
+                                        chosenAnswer = answer
+
+                                if (chosenAnswer != None):
                                     answerCols = chosenAnswer.keys()
                                     for col in answerCols:
                                         if (col != "_id"):
