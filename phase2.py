@@ -84,7 +84,7 @@ def main():
             searchResult = posts.getQuestionsByKeywords(keywords)
             if (len(list(searchResult)) > 0):
                 print("Id | Title | Creation Date | Score | Answer Count")
-                for item in searchResult:
+                for item in list(searchResult):
                     print("{id} | {title} | {date} | {score} | {answerCount}".format(
                         id = item["Id"],
                         title = item["Title"],
