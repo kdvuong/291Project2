@@ -121,10 +121,12 @@ def main():
                         elif (questionAction == "2" or questionAction == "list"):
                             answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
                             if (len(answers) > 0):
-                                for index, answer in enumerate(answers):
-                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                        acceptedAnswer = answers.pop(index)
-                                        answers.insert(0, acceptedAnswer)
+                                if chosenQuestion.has_key("AcceptedAnswerId"):
+                                    for index, answer in enumerate(answers):
+                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                            acceptedAnswer = answers.pop(index)
+                                            answers.insert(0, acceptedAnswer)
+                                
                                 print("Id | Body | Creation Date | Score ")
                                 for answer in answers:
                                     star = ""
