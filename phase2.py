@@ -101,7 +101,6 @@ def main():
                         break
                 
                 if (chosenQuestion != None):
-                    chosenQuestion = chosenQuestion[0]
                     columns = chosenQuestion.keys()
                     for col in columns:
                         if (col != "_id"):
