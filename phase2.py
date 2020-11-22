@@ -5,15 +5,20 @@ from TagController import TagController
 
 
 # constants
-ACTION_OPTIONS = """-----------------------------------
-Choose the following option:
------------------------------------
-1. POST (post a question)
-2. SEARCH (search for a post)
-3. LOGOUT (log out)
-------------------------------------
-What do you want to do? (number or text): """
+MAIN_ACTION_PROMPT = """Available actions:
+1. post   - post a question
+2. search - search for questions by keywords
+3. exit   - exit program"""
 
+QUESTION_ACTION_PROMPT = """Available actions:
+1. answer - post an answer for this question
+2. list   - list all answers
+3. vote   - cast a vote to this question
+4. back   - go back to search list"""
+
+ANSWER_ACTION_PROMPT = """Available action: 
+1. vote - cast a vote for this answer
+2. back - go back to answer list"""
 
 # setup db
 db = None
@@ -41,6 +46,75 @@ def getCountAndAvgScore(l):
     
     return (count, avgScore)
 
+def printSummary(questionCount, qAvgScore, answerCount, aAvgScore, voteCount):
+    print("Questions count    : {count}".format(count = questionCount))
+    print("Questions avg score: {score}".format(score = qAvgScore))
+    print("Answers count      : {count}".format(count = answerCount))
+    print("Answers avg score  : {score}".format(score = aAvgScore))
+    print("Votes casted       : {voteCount}".format(voteCount = voteCount))
+
+def printSearchResult(searchResult):
+    print("Id | Title | Creation Date | Score | Answer Count")
+    for item in searchResult:
+        print("{id} | {title} | {date} | {score} | {answerCount}".format(
+            id = item["Id"],
+            title = item["Title"],
+            date = item["CreationDate"],
+            score = item["Score"],
+            answerCount = item["AnswerCount"]
+        ))
+
+def getItemFromListById(id, itemList):
+    for item in itemList:
+        if (item["Id"] == id):
+            return item
+    
+    return None
+
+def printDocument(doc):
+    columns = doc.keys()
+    for col in columns:
+        if (col != "_id"):
+            print("{col}: {val}".format(col = col, val = doc[col]))
+
+def moveAcceptedAnswerToFront(answers, acceptedAnswerId):
+    if (answers[0]["Id"] != acceptedAnswerId):
+        for index, answer in enumerate(answers):
+            if (answer["Id"] == acceptedAnswerId):
+                acceptedAnswer = answers.pop(index)
+                answers.insert(0, acceptedAnswer)
+                break
+    else:
+        return
+
+def truncate(s, x):
+    if (len(s) > x):
+        return s[0:x] + "..."
+    else:
+        return s
+
+def printAnswerList(answers, hasAcceptedAnswer):
+    print("Id | Body | Creation Date | Score ")
+    for index, answer in enumerate(answers):
+        print("{id} | {body} | {date} | {score} {star}".format(
+            id = answer["Id"],
+            body = truncate(answer["Body"], 80),
+            date = answer["CreationDate"],
+            score = answer["Score"],
+            star = "*" if hasAcceptedAnswer and index == 0 else ""
+        ))
+
+def votePost(userId, post):
+    if (userId == ""):
+        votes.addVote(userId, post["Id"])
+        posts.increaseScore(post["_id"])
+        print("Vote success")
+    else:
+        if not votes.isVoted(userId, post["Id"]):
+            votes.addVote(userId, post["Id"])
+            posts.increaseScore(post["_id"])
+        else:
+            print("You already voted this post")
 
 def main():
     userId = input("Enter user id (optional): ")
@@ -52,20 +126,12 @@ def main():
         questionCount, qAvgScore = getCountAndAvgScore(questions)
         answerCount, aAvgScore = getCountAndAvgScore(answers)
         
-        print("Questions count    : {count}".format(count = questionCount))
-        print("Questions avg score: {score}".format(score = qAvgScore))
-        print("Answers count      : {count}".format(count = answerCount))
-        print("Answers avg score  : {score}".format(score = aAvgScore))
-        print("Votes casted       : {voteCount}".format(voteCount = voteCount))
+        printSummary(questionCount, qAvgScore, answerCount, aAvgScore, voteCount)
     else:
         print("No user id provided")
 
     while (True):
-        print("Available actions:")
-        print("1. post   - post a question")
-        print("2. search - search for questions by keywords")
-        print("3. exit   - exit program")
-
+        print(MAIN_ACTION_PROMPT)
         action = input("Choose an action (number or text): ").lower()
 
         if (action == "1" or action == "post"):
@@ -92,37 +158,19 @@ def main():
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = list(posts.getQuestionsByKeywords(keywords))
             if (len(searchResult) > 0):
-                print("Id | Title | Creation Date | Score | Answer Count")
-                for item in searchResult:
-                    print("{id} | {title} | {date} | {score} | {answerCount}".format(
-                        id = item["Id"],
-                        title = item["Title"],
-                        date = item["CreationDate"],
-                        score = item["Score"],
-                        answerCount = item["AnswerCount"]
-                    ))
+                printSearchResult(searchResult)
                 
                 chosenQid = input("Choose a question id: ")
-                chosenQuestion = None
-                for question in searchResult:
-                    if (question["Id"] == chosenQid):
-                        chosenQuestion = question
-                        break
+                chosenQuestion = getItemFromListById(chosenQid, searchResult)
                 
                 if (chosenQuestion != None):
-                    columns = chosenQuestion.keys()
-                    for col in columns:
-                        if (col != "_id"):
-                            print("{col}: {val}".format(col = col, val = chosenQuestion[col]))
+                    printDocument(chosenQuestion)
                     posts.increaseViewCount(chosenQuestion["_id"])
 
                     while (True):
-                        print("Available actions:")
-                        print("1. answer - post an answer for this question")
-                        print("2. list   - list all answers")
-                        print("3. vote   - cast a vote to this question")
-                        print("4. back   - go back to search list")
+                        print(QUESTION_ACTION_PROMPT)
                         questionAction = input("Choose an action (text or number): ").lower()
+
                         if (questionAction == "1" or questionAction == "answer"):
                             answerBody = input("Answer body: ")
                             if (len(answerBody) == 0):
@@ -132,60 +180,24 @@ def main():
                         elif (questionAction == "2" or questionAction == "list"):
                             answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
                             if (len(answers) > 0):
-                                if "AcceptedAnswerId" in chosenQuestion:
-                                    for index, answer in enumerate(answers):
-                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                            acceptedAnswer = answers.pop(index)
-                                            answers.insert(0, acceptedAnswer)
+                                hasAcceptedAnswer = "AcceptedAnswerId" in chosenQuestion
+                                if hasAcceptedAnswer:
+                                    moveAcceptedAnswerToFront(answers, chosenQuestion["AcceptedAnswerId"])
                                 
-                                print("Id | Body | Creation Date | Score ")
-                                for answer in answers:
-                                    star = ""
-                                    if "AcceptedAnswerId" in chosenQuestion:
-                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                            star = "*"
+                                printAnswerList(answers, hasAcceptedAnswer)
 
-                                    answerBody = answer["Body"]
-                                    if (len(answerBody) > 80):
-                                        answerBody = answerBody[0:80] + "..."
-
-                                    print("{id} | {body} | {date} | {score} {star}".format(
-                                        id = answer["Id"],
-                                        body = answerBody,
-                                        date = answer["CreationDate"],
-                                        score = answer["Score"],
-                                        star = star
-                                    ))
                                 chosenAid = input("Choose an answer id: ")
-                                chosenAnswer = None
-
-                                for answer in answers:
-                                    if (answer["Id"] == chosenAid):
-                                        chosenAnswer = answer
+                                chosenAnswer = getItemFromListById(chosenAid, answers)
 
                                 if (chosenAnswer != None):
-                                    answerCols = chosenAnswer.keys()
-                                    for col in answerCols:
-                                        if (col != "_id"):
-                                            print("{col}: {val}".format(col = col, val = chosenAnswer[col]))
+                                    printDocument(chosenAnswer)
                                     
                                     while (True):
-                                        print("Available action: ")
-                                        print("1. vote - cast a vote for this answer")
-                                        print("2. back - go back to answer list")
+                                        print(ANSWER_ACTION_PROMPT)
                                         answerAction = input("Choose an action: ").lower()
 
                                         if (answerAction == "1" or answerAction == "vote"):
-                                            if (userId == ""):
-                                                votes.addVote(userId, chosenAnswer["Id"])
-                                                posts.increaseScore(chosenAnswer["_id"])
-                                                print("Vote success")
-                                            else:
-                                                if not votes.isVoted(userId, chosenAnswer["Id"]):
-                                                    votes.addVote(userId, chosenAnswer["Id"])
-                                                    posts.increaseScore(chosenAnswer["_id"])
-                                                else:
-                                                    print("You already voted this post")
+                                            votePost(userId, chosenAnswer)
                                         elif (answerAction == "2" or answerAction == "back"):
                                             break
                                         else:
@@ -194,18 +206,8 @@ def main():
                                     print("ERROR: invalid answer id. Choose again.")
                             else:
                                 print("Question has no answer.")
-
                         elif (questionAction == "3" or questionAction == "vote"):
-                            if (userId == ""):
-                                votes.addVote(userId, chosenQuestion["Id"])
-                                posts.increaseScore(chosenQuestion["_id"])
-                                print("Vote success")
-                            else:
-                                if not votes.isVoted(userId, chosenQuestion["Id"]):
-                                    votes.addVote(userId, chosenQuestion["Id"])
-                                    posts.increaseScore(chosenQuestion["_id"])
-                                else:
-                                    print("You already voted this post")
+                            votePost(userId, chosenQuestion)
                         elif (questionAction == "4" or questionAction == "back"):
                             break
                         else:
