@@ -182,11 +182,16 @@ def main():
                                 print("Question has no answer.")
 
                         elif (questionAction == "3" or questionAction == "vote"):
-                            if (votes.isVoted(userId, chosenQuestion["Id"])):
+                            if (userId == ""):
                                 votes.addVote(userId, chosenQuestion["Id"])
                                 posts.increaseScore(chosenQuestion["_id"])
+                                print("Vote success")
                             else:
-                                print("You already voted this post")
+                                if (votes.isVoted(userId, chosenQuestion["Id"])):
+                                    votes.addVote(userId, chosenQuestion["Id"])
+                                    posts.increaseScore(chosenQuestion["_id"])
+                                else:
+                                    print("You already voted this post")
                         elif (questionAction == "4" or questionAction == "back"):
                             break
                         else:
