@@ -167,7 +167,7 @@ def main():
                                                 posts.increaseScore(chosenAnswer["_id"])
                                                 print("Vote success")
                                             else:
-                                                if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                                if not votes.isVoted(userId, chosenAnswer["Id"]):
                                                     votes.addVote(userId, chosenAnswer["Id"])
                                                     posts.increaseScore(chosenAnswer["_id"])
                                                 else:
@@ -187,7 +187,7 @@ def main():
                                 posts.increaseScore(chosenQuestion["_id"])
                                 print("Vote success")
                             else:
-                                if (votes.isVoted(userId, chosenQuestion["Id"])):
+                                if not votes.isVoted(userId, chosenQuestion["Id"]):
                                     votes.addVote(userId, chosenQuestion["Id"])
                                     posts.increaseScore(chosenQuestion["_id"])
                                 else:
