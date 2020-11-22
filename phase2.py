@@ -84,9 +84,8 @@ def main():
             searchResult = list(posts.getQuestionsByKeywords(keywords))
             if (len(searchResult) > 0):
                 print("Id | Title | Creation Date | Score | Answer Count")
-                for index, item in enumerate(searchResult):
-                    print("{index} | {id} | {title} | {date} | {score} | {answerCount}".format(
-                        index = index,
+                for item in searchResult:
+                    print("{id} | {title} | {date} | {score} | {answerCount}".format(
                         id = item["Id"],
                         title = item["Title"],
                         date = item["CreationDate"],
@@ -94,9 +93,14 @@ def main():
                         answerCount = item["AnswerCount"]
                     ))
                 
-                chosenIndex = int(input("Choose a question by index: "))
-                if (chosenIndex < len(searchResult) and chosenIndex >= 0):
-                    chosenQuestion = searchResult[chosenIndex]
+                chosenQid = input("Choose a question id: ")
+                chosenQuestion = None
+                for question in searchResult:
+                    if (question["Id"] == chosenQid):
+                        chosenQuestion = question
+                        break
+                
+                if (chosenQuestion != None):
                     columns = chosenQuestion.keys()
                     for col in columns:
                         if (col != "_id"):
@@ -108,28 +112,86 @@ def main():
                         print("1. answer - post an answer for this question")
                         print("2. list   - list all answers")
                         print("3. vote   - cast a vote to this question")
-                        print("4. back   - go back")
+                        print("4. back   - go back to search list")
                         questionAction = input("Choose an action (text or number): ").lower()
                         if (questionAction == "1" or questionAction == "answer"):
                             answerBody = input("Answer body: ")
                             posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
-                            # list answers
-                            continue
+                            answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
+                            if (len(answers) > 0):
+                                for index, answer in enumerate(answers):
+                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                        acceptedAnswer = answers.pop(index)
+                                        answers.insert(0, acceptedAnswer)
+                                print("Id | Body | Creation Date | Score ")
+                                for answer in answers:
+                                    star = ""
+                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                        star = "*"
+
+                                    answerBody = answer["Body"]
+                                    if (len(answerBody) > 80):
+                                        answerBody = answerBody[0:80] + "..."
+
+                                    print("{id} | {body} | {date} | {score} {star}".format(
+                                        id = answer["Id"],
+                                        body = answerBody,
+                                        date = answer["CreationDate"],
+                                        score = answer["Score"],
+                                        star = star
+                                    ))
+                                chosenAid = input("Choose an answer id: ")
+                                chosenAnswer = None
+
+                                for answer in answers:
+                                    if (answer["Id"] == chosenAid):
+                                        chosenAnswer = answer
+
+                                if (chosenAnswer != None):
+                                    answerCols = chosenAnswer.keys()
+                                    for col in answerCols:
+                                        if (col != "_id"):
+                                            print("{col}: {val}".format(col = col, val = chosenAnswer[col]))
+                                    
+                                    while (True):
+                                        print("Available action: ")
+                                        print("1. vote - cast a vote for this answer")
+                                        print("2. back - go back to answer list")
+                                        answerAction = input("Choose an action: ").lower()
+
+                                        if (answerAction == "1" or answerAction == "vote"):
+                                            if (userId == ""):
+                                                votes.addVote(userId, chosenAnswer["Id"])
+                                                posts.increaseScore(chosenAnswer["_id"])
+                                                print("Vote success")
+                                            else:
+                                                if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                                    votes.addVote(userId, chosenAnswer["Id"])
+                                                    posts.increaseScore(chosenAnswer["_id"])
+                                                else:
+                                                    print("You already voted this post")
+                                        elif (answerAction == "2" or answerAction == "back"):
+                                            break
+                                        else:
+                                            print("ERROR: invalid action. Choose again.")
+                                else:
+                                    print("ERROR: invalid answer id. Choose again.")
+                            else:
+                                print("Question has no answer.")
+
                         elif (questionAction == "3" or questionAction == "vote"):
-                            if (!posts.isVoted(userId)):
-                                votes.vote(userId, chosenQuestion["Id"])
-                                posts.increateScore(post)
+                            if (votes.isVoted(userId, chosenQuestion["Id"])):
+                                votes.addVote(userId, chosenQuestion["Id"])
+                                posts.increaseScore(chosenQuestion["_id"])
                             else:
                                 print("You already voted this post")
-                            # vote
-                            continue
                         elif (questionAction == "4" or questionAction == "back"):
                             break
                         else:
                             print("ERROR: invalid action. Choose again.")
                 else:
-                    print("ERROR: invalid index. Choose again.")
+                    print("ERROR: invalid question id. Choose again.")
             else:
                 print("No questions found with provided keywords: {keywords}".format(keywords = keywords))
         elif (action == "3" or action == "exit"):
