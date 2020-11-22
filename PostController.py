@@ -104,3 +104,7 @@ class PostController:
             answer["OwnerUserId"] = userId
 
         self.collection.insert_one(answer)
+    
+    
+    def increateScore(self, post):
+        post["Score"] += 1
