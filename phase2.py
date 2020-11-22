@@ -133,7 +133,7 @@ def main():
                                     answerBody = answer["Body"]
                                     if (len(answerBody) > 80):
                                         answerBody = answerBody[0:80] + "..."
-                                        
+
                                     print("{id} | {body} | {date} | {score} {star}".format(
                                         id = answer["Id"],
                                         body = answerBody,
@@ -161,11 +161,16 @@ def main():
                                         answerAction = input("Choose an action: ").lower()
 
                                         if (answerAction == "1" or answerAction == "vote"):
-                                            if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                            if (userId == ""):
                                                 votes.addVote(userId, chosenAnswer["Id"])
                                                 posts.increaseScore(chosenAnswer["_id"])
+                                                print("Vote success")
                                             else:
-                                                print("You already voted this post")
+                                                if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                                    votes.addVote(userId, chosenAnswer["Id"])
+                                                    posts.increaseScore(chosenAnswer["_id"])
+                                                else:
+                                                    print("You already voted this post")
                                         elif (answerAction == "2" or answerAction == "back"):
                                             break
                                         else:
