@@ -70,8 +70,16 @@ def main():
 
         if (action == "1" or action == "post"):
             title = input("Enter a title: ")
+            if (len(title) == 0):
+                print("ERROR: post title cannot be empty")
+                continue
+
             body = input("Enter a body: ")
-            tagList = input("Enter a tag (optional): ").lower().strip()
+            if (len(body) == 0):
+                print("ERROR: post body cannot be empty")
+                continue
+
+            tagList = input("Enter tags (optional): ").lower().strip()
             
             if (tagList != ""):
                 tagList = tagList.split(" ")
@@ -117,6 +125,9 @@ def main():
                         questionAction = input("Choose an action (text or number): ").lower()
                         if (questionAction == "1" or questionAction == "answer"):
                             answerBody = input("Answer body: ")
+                            if (len(answerBody) == 0):
+                                print("ERROR: answer body cannot be empty")
+                                continue
                             posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
                             answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
