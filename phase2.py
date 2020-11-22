@@ -117,6 +117,11 @@ def main():
                             # list answers
                             continue
                         elif (questionAction == "3" or questionAction == "vote"):
+                            if (!posts.isVoted(userId)):
+                                votes.vote(userId, chosenQuestion["Id"])
+                                posts.increateScore(post)
+                            else:
+                                print("You already voted this post")
                             # vote
                             continue
                         elif (questionAction == "4" or questionAction == "back"):
