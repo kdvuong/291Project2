@@ -121,7 +121,7 @@ def main():
                         elif (questionAction == "2" or questionAction == "list"):
                             answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
                             if (len(answers) > 0):
-                                if "AcceptedAnswerId" in chosenQuestion:
+                                if "AcceptedAnswerId" in chosenQuestion.keys():
                                     for index, answer in enumerate(answers):
                                         if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
                                             acceptedAnswer = answers.pop(index)
