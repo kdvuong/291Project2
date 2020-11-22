@@ -71,14 +71,15 @@ def main():
         if (action == "1" or action == "post"):
             title = input("Enter a title: ")
             body = input("Enter a body: ")
-            tags = input("Enter a tag (optional): ").lower().strip()
+            tagList = input("Enter a tag (optional): ").lower().strip()
             
-            if (tags != ""):
-                tags = tags.split(" ")
+            if (tagList != ""):
+                tagList = tagList.split(" ")
+                tags.addTags(tagList)
             else:
-                tags = []
+                tagList = []
             
-            posts.postQuestion(userId, body, title, tags)
+            posts.postQuestion(userId, body, title, tagList)
         elif (action == "2" or action == "search"):
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = list(posts.getQuestionsByKeywords(keywords))
