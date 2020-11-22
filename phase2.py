@@ -129,7 +129,7 @@ def main():
                                     star = ""
                                     if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
                                         star = "*"
-                                    print("{id} | {title} | {date} | {score} {star}".format(
+                                    print("{id} | {body} | {date} | {score} {star}".format(
                                         id = answer["Id"],
                                         body = answer["Body"],
                                         date = answer["CreationDate"],
