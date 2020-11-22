@@ -70,15 +70,24 @@ def main():
 
         if (action == "1" or action == "post"):
             title = input("Enter a title: ")
+            if (len(title) == 0):
+                print("ERROR: post title cannot be empty")
+                continue
+
             body = input("Enter a body: ")
-            tags = input("Enter a tag (optional): ").lower().strip()
+            if (len(body) == 0):
+                print("ERROR: post body cannot be empty")
+                continue
+
+            tagList = input("Enter tags (optional): ").lower().strip()
             
-            if (tags != ""):
-                tags = tags.split(" ")
+            if (tagList != ""):
+                tagList = tagList.split(" ")
+                tags.addTags(tagList)
             else:
-                tags = []
+                tagList = []
             
-            posts.postQuestion(userId, body, title, tags)
+            posts.postQuestion(userId, body, title, tagList)
         elif (action == "2" or action == "search"):
             keywords = input("Enter keywords to search: ").lower().split(" ")
             searchResult = list(posts.getQuestionsByKeywords(keywords))
@@ -116,19 +125,25 @@ def main():
                         questionAction = input("Choose an action (text or number): ").lower()
                         if (questionAction == "1" or questionAction == "answer"):
                             answerBody = input("Answer body: ")
+                            if (len(answerBody) == 0):
+                                print("ERROR: answer body cannot be empty")
+                                continue
                             posts.postAnswer(userId, chosenQuestion["Id"], answerBody)
                         elif (questionAction == "2" or questionAction == "list"):
                             answers = list(posts.getAnswersByQuestionId(chosenQuestion["Id"]))
                             if (len(answers) > 0):
-                                for index, answer in enumerate(answers):
-                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                        acceptedAnswer = answers.pop(index)
-                                        answers.insert(0, acceptedAnswer)
+                                if "AcceptedAnswerId" in chosenQuestion:
+                                    for index, answer in enumerate(answers):
+                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                            acceptedAnswer = answers.pop(index)
+                                            answers.insert(0, acceptedAnswer)
+                                
                                 print("Id | Body | Creation Date | Score ")
                                 for answer in answers:
                                     star = ""
-                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                        star = "*"
+                                    if "AcceptedAnswerId" in chosenQuestion:
+                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                            star = "*"
 
                                     answerBody = answer["Body"]
                                     if (len(answerBody) > 80):
@@ -166,7 +181,7 @@ def main():
                                                 posts.increaseScore(chosenAnswer["_id"])
                                                 print("Vote success")
                                             else:
-                                                if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                                if not votes.isVoted(userId, chosenAnswer["Id"]):
                                                     votes.addVote(userId, chosenAnswer["Id"])
                                                     posts.increaseScore(chosenAnswer["_id"])
                                                 else:
@@ -181,11 +196,16 @@ def main():
                                 print("Question has no answer.")
 
                         elif (questionAction == "3" or questionAction == "vote"):
-                            if (votes.isVoted(userId, chosenQuestion["Id"])):
+                            if (userId == ""):
                                 votes.addVote(userId, chosenQuestion["Id"])
                                 posts.increaseScore(chosenQuestion["_id"])
+                                print("Vote success")
                             else:
-                                print("You already voted this post")
+                                if not votes.isVoted(userId, chosenQuestion["Id"]):
+                                    votes.addVote(userId, chosenQuestion["Id"])
+                                    posts.increaseScore(chosenQuestion["_id"])
+                                else:
+                                    print("You already voted this post")
                         elif (questionAction == "4" or questionAction == "back"):
                             break
                         else:
