@@ -129,9 +129,14 @@ def main():
                                     star = ""
                                     if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
                                         star = "*"
+
+                                    answerBody = answer["Body"]
+                                    if (len(answerBody) > 80):
+                                        answerBody = answerBody[0:80] + "..."
+                                        
                                     print("{id} | {body} | {date} | {score} {star}".format(
                                         id = answer["Id"],
-                                        body = answer["Body"],
+                                        body = answerBody,
                                         date = answer["CreationDate"],
                                         score = answer["Score"],
                                         star = star
