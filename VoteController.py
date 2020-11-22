@@ -1,3 +1,6 @@
+from datetime import datetime
+import uuid
+
 class VoteController:
     def __init__(self, db):
         self.collectionName = 'Votes'
@@ -25,3 +28,26 @@ class VoteController:
         return self.collection.find({
             "UserId": userId
         })
+    
+    def addVote(self, userId, postId):
+        vote = {
+            "Id": str(uuid.uuid4()),
+            "PostId": postId,
+            "VoteTypeId": "2",
+            "CreationDate": datetime.now(),
+        }
+
+        if (userId != ""):
+            vote["UserId"] = userId
+
+        self.collection.insert_one(vote)
+    
+    def isVoted(self, userId, postId):
+        vote = self.collection.find_one({
+            "UserId": userId,
+            "PostId": postId
+        })
+
+        return vote != None
+
+    

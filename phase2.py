@@ -149,25 +149,33 @@ def main():
                                         if (col != "_id"):
                                             print("{col}: {val}".format(col = col, val = chosenAnswer[col]))
                                     
-                                    print("Available action: ")
-                                    print("1. vote - cast a vote for this answer")
-                                    print("2. back - go back to answer list")
-                                    answerAction = input("Choose an action: ").lower()
+                                    while (True):
+                                        print("Available action: ")
+                                        print("1. vote - cast a vote for this answer")
+                                        print("2. back - go back to answer list")
+                                        answerAction = input("Choose an action: ").lower()
 
-                                    if (answerAction == "1" or answerAction == "vote"):
-                                        continue
-                                    elif (answerAction == "2" or answerAction == "back"):
-                                        break
-                                    else:
-                                        print("ERROR: invalid action. Choose again.")
+                                        if (answerAction == "1" or answerAction == "vote"):
+                                            if (votes.isVoted(userId, chosenAnswer["Id"])):
+                                                votes.addVote(userId, chosenAnswer["Id"])
+                                                posts.increaseScore(chosenAnswer["_id"])
+                                            else:
+                                                print("You already voted this post")
+                                        elif (answerAction == "2" or answerAction == "back"):
+                                            break
+                                        else:
+                                            print("ERROR: invalid action. Choose again.")
                                 else:
                                     print("ERROR: invalid answer id. Choose again.")
                             else:
                                 print("Question has no answer.")
 
                         elif (questionAction == "3" or questionAction == "vote"):
-                            # vote
-                            continue
+                            if (votes.isVoted(userId, chosenQuestion["Id"])):
+                                votes.addVote(userId, chosenQuestion["Id"])
+                                posts.increaseScore(chosenQuestion["_id"])
+                            else:
+                                print("You already voted this post")
                         elif (questionAction == "4" or questionAction == "back"):
                             break
                         else:

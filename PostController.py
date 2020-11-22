@@ -107,3 +107,6 @@ class PostController:
 
     def getAnswersByQuestionId(self, qid):
         return self.collection.find({"ParentId": qid, "PostTypeId": "2"})
+    
+    def increaseScore(self, id):
+        self.collection.update_one({ "_id": id}, {"$inc": { "Score": 1}})
