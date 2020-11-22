@@ -124,69 +124,59 @@ def main():
                                     if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
                                         acceptedAnswer = answers.pop(index)
                                         answers.insert(0, acceptedAnswer)
-                                
-                                while (True):
-                                    print("Id | Body | Creation Date | Score ")
-                                    for answer in answers:
-                                        star = ""
-                                        if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
-                                            star = "*"
+                                print("Id | Body | Creation Date | Score ")
+                                for answer in answers:
+                                    star = ""
+                                    if (answer["Id"] == chosenQuestion["AcceptedAnswerId"]):
+                                        star = "*"
 
-                                        answerBody = answer["Body"]
-                                        if (len(answerBody) > 80):
-                                            answerBody = answerBody[0:80] + "..."
+                                    answerBody = answer["Body"]
+                                    if (len(answerBody) > 80):
+                                        answerBody = answerBody[0:80] + "..."
 
-                                        print("{id} | {body} | {date} | {score} {star}".format(
-                                            id = answer["Id"],
-                                            body = answerBody,
-                                            date = answer["CreationDate"],
-                                            score = answer["Score"],
-                                            star = star
-                                        ))
+                                    print("{id} | {body} | {date} | {score} {star}".format(
+                                        id = answer["Id"],
+                                        body = answerBody,
+                                        date = answer["CreationDate"],
+                                        score = answer["Score"],
+                                        star = star
+                                    ))
+                                chosenAid = input("Choose an answer id: ")
+                                chosenAnswer = None
+
+                                for answer in answers:
+                                    if (answer["Id"] == chosenAid):
+                                        chosenAnswer = answer
+
+                                if (chosenAnswer != None):
+                                    answerCols = chosenAnswer.keys()
+                                    for col in answerCols:
+                                        if (col != "_id"):
+                                            print("{col}: {val}".format(col = col, val = chosenAnswer[col]))
                                     
-                                    print("Available actions:")
-                                    print("1. answer id")
-                                    print("2. back")
-                                    chosenAid = input("Choose an answer id: ").lower()
+                                    while (True):
+                                        print("Available action: ")
+                                        print("1. vote - cast a vote for this answer")
+                                        print("2. back - go back to answer list")
+                                        answerAction = input("Choose an action: ").lower()
 
-                                    if (chosenAid == "back"):
-                                        break
-
-                                    chosenAnswer = None
-
-                                    for answer in answers:
-                                        if (answer["Id"] == chosenAid):
-                                            chosenAnswer = answer
-
-                                    if (chosenAnswer != None):
-                                        answerCols = chosenAnswer.keys()
-                                        for col in answerCols:
-                                            if (col != "_id"):
-                                                print("{col}: {val}".format(col = col, val = chosenAnswer[col]))
-                                        
-                                        while (True):
-                                            print("Available action: ")
-                                            print("1. vote - cast a vote for this answer")
-                                            print("2. back - go back to answer list")
-                                            answerAction = input("Choose an action: ").lower()
-
-                                            if (answerAction == "1" or answerAction == "vote"):
-                                                if (userId == ""):
+                                        if (answerAction == "1" or answerAction == "vote"):
+                                            if (userId == ""):
+                                                votes.addVote(userId, chosenAnswer["Id"])
+                                                posts.increaseScore(chosenAnswer["_id"])
+                                                print("Vote success")
+                                            else:
+                                                if (votes.isVoted(userId, chosenAnswer["Id"])):
                                                     votes.addVote(userId, chosenAnswer["Id"])
                                                     posts.increaseScore(chosenAnswer["_id"])
-                                                    print("Vote success")
                                                 else:
-                                                    if (votes.isVoted(userId, chosenAnswer["Id"])):
-                                                        votes.addVote(userId, chosenAnswer["Id"])
-                                                        posts.increaseScore(chosenAnswer["_id"])
-                                                    else:
-                                                        print("You already voted this post")
-                                            elif (answerAction == "2" or answerAction == "back"):
-                                                break
-                                            else:
-                                                print("ERROR: invalid action. Choose again.")
-                                    else:
-                                        print("ERROR: invalid answer id. Choose again.\n")
+                                                    print("You already voted this post")
+                                        elif (answerAction == "2" or answerAction == "back"):
+                                            break
+                                        else:
+                                            print("ERROR: invalid action. Choose again.")
+                                else:
+                                    print("ERROR: invalid answer id. Choose again.")
                             else:
                                 print("Question has no answer.")
 
