@@ -14,7 +14,7 @@ QUESTION_ACTION_PROMPT = """Available actions:
 1. answer - post an answer for this question
 2. list   - list all answers
 3. vote   - cast a vote to this question
-4. back   - go back to search list"""
+4. back   - go back to main"""
 
 ANSWER_ACTION_PROMPT = """Available action: 
 1. vote - cast a vote for this answer
@@ -113,6 +113,7 @@ def votePost(userId, post):
         if not votes.isVoted(userId, post["Id"]):
             votes.addVote(userId, post["Id"])
             posts.increaseScore(post["_id"])
+            print("Vote success")
         else:
             print("You already voted this post")
 
