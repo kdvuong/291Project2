@@ -1,8 +1,5 @@
 from datetime import datetime
 import uuid
-from Parser import Parser
-
-parser = Parser()
 
 # Class to handle post action
 class PostController:
@@ -27,8 +24,7 @@ class PostController:
             "AnswerCount": 0,
             "CommentCount": 0,
             "FavoriteCount": 0,
-            "ContentLicense": "CC BY-SA 2.5",
-            "Terms": parser.parseTitleAndBody({"title": title, "body": body})
+            "ContentLicense": "CC BY-SA 2.5"
         }
 
         if (userId != ""): # with userID
@@ -98,8 +94,7 @@ class PostController:
             "Score": 0,
             "Body": body,
             "CommentCount": 0,
-            "ContentLicense": "CC BY-SA 2.5",
-            "Terms": parser.parseTitleAndBody({"title": "", "body": body})
+            "ContentLicense": "CC BY-SA 2.5"
         }
 
         print(answer["Id"])
